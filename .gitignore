@@ -1,0 +1,7 @@
+/env
+LAPD/data
+*.csv
+.DS_Store
+LAPD/1_cleaning.ipynb
+LAPD/2_cleaning.ipynb
+LAPD/__pycache__
