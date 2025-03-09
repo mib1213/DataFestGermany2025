@@ -41,7 +41,7 @@ conda config --set channel_priority strict
 - Confirm if you see the correct python version by running `python --version`. It should be 3.12.9 exactly.
 - Now install the dependencies, for example:
 ```bash
-conda install pandas numpy seaborn matplotlib ipykernel missingno
+conda install pandas numpy seaborn matplotlib ipykernel missingno Jinja2 folium
 ```
 - Similarly further packages can be installed by running `conda install package_name`
 
@@ -77,5 +77,6 @@ conda install pandas numpy seaborn matplotlib ipykernel missingno
 
 - Download the files `Crime_Data_2020_to_Present.csv` and `mocodes.csv` from [THI Sharepoint](https://thide-my.sharepoint.com/:f:/r/personal/mib1213_thi_de/Documents/DataFestGermany2025?csf=1&web=1&e=lsVGZK).
 - Save these files in the `data` folder inside the `DataFestGermany2025`.
+- Once you run the `1_data_clearning.ipynb`, you will get the cleaned data in 2 different formats as a .pkl file, one is `crime_data.pkl` and the other is `exploded_crime_data.pkl`. This .pkl file can easily be imported in Pandas for data analysis as it will keep the records of datatypes.
 
 
