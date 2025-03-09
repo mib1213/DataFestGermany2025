@@ -38,10 +38,12 @@ conda config --set channel_priority strict
 - Go to the folder where you want to create an env using the terminal. (In our case it would be `DataFestGermany2025` folder)
 - Run the command `conda create -p ./env python=3.12.9`
 - Once the env is created, run `conda activate ./env`. This should activate the env which can be seen at the front of the CLI in parantheses.
+- Confirm if you see the correct python version by running `python --version`. It should be 3.12.9 exactly.
 - Now install the dependencies, for example:
 ```bash
-conda install pandas numpy seaborn matplotlib ipykernel # ipykernel for Jupyter Notebooks
+conda install pandas numpy seaborn matplotlib ipykernel missingno
 ```
+- Similarly further packages can be installed by running `conda install package_name`
 
 ### How to use thie newly created env in VS Code?
 - First make sure to open the correct folder in VS Code, in our case it should be `DataFestGermany2025` folder.
@@ -70,5 +72,10 @@ conda install pandas numpy seaborn matplotlib ipykernel # ipykernel for Jupyter 
 
 - Go to the this link [Issues](https://github.com/mib1213/DataFestGermany2025/issues)
 - Create a new issue and select an Assignee if relevant.
+
+### How to run LAPD notebooks?
+
+- Download the files `Crime_Data_2020_to_Present.csv` and `mocodes.csv` from [THI Sharepoint](https://thide-my.sharepoint.com/:f:/r/personal/mib1213_thi_de/Documents/DataFestGermany2025?csf=1&web=1&e=lsVGZK).
+- Save these files in the `data` folder inside the `DataFestGermany2025`.
 
 
