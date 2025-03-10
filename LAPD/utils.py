@@ -140,3 +140,10 @@ def impute_random(series, random_seed=None):
     imputed_values = series.dropna().sample(n_missing, replace=True, random_state=random_seed)
     imputed_series[missing_mask] = imputed_values.values
     return imputed_series
+
+def convert_to_categorical(df, columns):
+    df_ = df.copy()
+    for col in columns:
+        assert col in df.columns, f"Column {col} is not present in df"
+        df_[col] = df_[col].astype('object')
+    return df_

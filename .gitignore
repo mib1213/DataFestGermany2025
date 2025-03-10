@@ -1,4 +1,5 @@
 /env
+/env_2
 *.csv
 .DS_Store
 LAPD/__pycache__
