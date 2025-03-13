@@ -1,4 +1,0 @@
-git branch # to check the branches in local repo
-git branch -r # to check the branches in remote repo
-git switch --track origin/BRANCH_NAME
-git branch -d BRANCH_NAME or git branch -D BRANCH_NAME (for force delete without commits)
