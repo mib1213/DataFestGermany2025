@@ -60,13 +60,22 @@ conda install pandas numpy seaborn matplotlib ipykernel missingno Jinja2 folium
 *Once the env is deleted, you should be able to create another env using the same steps.*
 
 ### How to add unimportant/private files in .gitignore? 
-(coming soon...)
+For example you want to ignore a file named "test.ipynb":
+- Using Terminal:
+    - echo "test.ipynb" >> .gitignore
+- Using Data Explorer:
+    - Open the .gitignore file and add the "test.ipynb" without quotes
 
 ### How to create your own separate branch to do edits in the same repository?
-(coming soon...)
+If you want to make your own edits or just want to play out with code, it is recommended to create your own branch, you will then also be able to push it to this remote repo so others can also see it (optionally).
+
+- First look into the current branch name, you are working in. Run `git branch`. You should now see the `main` as the currently active branch.
+- To create a new branch, run `git branch YOUR_BRANCH_NAME`
+- Now to switch to the newly created branch, run `git switch YOUR_BRANCH_NAME`
+- Now check, if the new branch is active, run `git branch` again and now you should see 2 branches, one is `main` and the other is your newly created branch `YOUR_BRANCH_NAME`. But the new branch should be active this time.
 
 ### How to push the branch into github repository?
-(coming soon...)
+Now if you want to push (publish) your branch into the remote repository, you can follow the following steps:
 
 ### How to create an issue for problems/suggestions on the github repository?
 
