@@ -1,0 +1,17 @@
+name: datafest
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.12.*
+  - pandas=2.2.*
+  - numpy=2.1.*
+  - matplotlib=3.9.*
+  - ipykernel=6.29.*
+  - ipywidgets=8.1.*
+  - jinja2=3.1.*
+  - folium=0.19.*
+  - missingno=0.5.*
+  - ydata-profiling=4.12.*
+  - sweetviz=2.3.*
+  - seaborn=0.13.*
