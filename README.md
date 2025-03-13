@@ -45,7 +45,7 @@ conda install pandas numpy seaborn matplotlib ipykernel missingno Jinja2 folium
 ```
 - Similarly further packages can be installed by running `conda install package_name`
 
-### How to use thie newly created env in VS Code?
+### How to use this newly created env in VS Code?
 - First make sure to open the correct folder in VS Code, in our case it should be `DataFestGermany2025` folder.
 - Create a .ipynb file and open it.
 - You should now see the option of "Select kernel" at the top right corner.
