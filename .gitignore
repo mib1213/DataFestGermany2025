@@ -1,6 +1,9 @@
 /env
+/env_2
 *.csv
 .DS_Store
 LAPD/__pycache__
 *.pkl
 *.xlsx
+
+git_cmds.txt
