@@ -35,27 +35,26 @@ conda config --set channel_priority strict
 
 ### How to make a venv using conda?
 
-- Go to the folder where you want to create an env using the terminal. (In our case it would be `DataFestGermany2025` folder)
-- Run the command `conda create -p ./env python=3.12.9`
-- Once the env is created, run `conda activate ./env`. This should activate the env which can be seen at the front of the CLI in parantheses.
-- Confirm if you see the correct python version by running `python --version`. It should be 3.12.9 exactly.
-- Now install the dependencies, for example:
-```bash
-conda install pandas numpy seaborn matplotlib ipykernel missingno Jinja2 folium
-```
-- Similarly further packages can be installed by running `conda install package_name`
+- Go to the folder where you have the `environment.yml` file, if you have cloned the 'DataFestGermany2025` repository, it should be in that folder.
+- Once in the same folder, run the command `conda env create -f environment.yml -y`.
+- Once the environment has been created, run `conda activate datafest`. !!Make sure you were already not in any venv/conda environment by running `conda deactivate` for conda or run `deactivate` for venv!!
+- Now you should see the env name at the beginning of the command prompt like `(datafest)`, if that is the case, you are in the environment.
+- You can run a cmd `conda list` to see all the available dependencies. You can download more dependencies by using `conda install DEPENDENCY_NAME`, but please let me know first, since it can create dependency issues.
+- You can see all the currently available conda environments by running `conda env list`.
+
 
 ### How to use this newly created env in VS Code?
 - First make sure to open the correct folder in VS Code, in our case it should be `DataFestGermany2025` folder.
 - Create a .ipynb file and open it.
 - You should now see the option of "Select kernel" at the top right corner.
-- Click on this option, select "Other kernels" -> "Python environments" -> "env\python.exe". (Usually it is also the "recommended" enviroment, if the correct folder is opened in VS Code.)
-
-*Note: The versions of Python and dependencies are not confirmed yet. So most likely you will have to delete this environment later and create a new one.*
+- Click on this option, select "Select Another kernel" -> "Python Environments" -> "datafest (Python 3.10.*)".
+- If you want to use a native .py file, once opened, you need to press CTRL + SHIFT + P, then type "Select Interpreter" and then again select the same Python 3.10.* (datafest) environment.
 
 ### How to delete an env?
 
-- Just delete the folder named `env` from DataFestGermany2025
+- First make sure you are outside of the environment, you want to delete, by running `conda deactivate`.
+- Once outside, run the command `conda env remove -n ENVIRONMENT_NAME`.
+- Optionally, if you want to remove by path, you can run `conda env remove -p ENVIRONMENT_PATH`.
 
 *Once the env is deleted, you should be able to create another env using the same steps.*
 

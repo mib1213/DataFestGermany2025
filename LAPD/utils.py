@@ -147,3 +147,22 @@ def convert_to_categorical(df, columns):
         assert col in df.columns, f"Column {col} is not present in df"
         df_[col] = df_[col].astype('object')
     return df_
+
+def get_column_name_mapping(file_path):
+    return pd.read_csv(file_path, index_col='old').new.to_dict()
+
+def create_column_name_mapping(df, file_path):
+    df = pd.DataFrame({'old': df.columns, 'new': '', 'is_categorical': ''})
+    df.to_csv(file_path, index=False)
+
+def get_categorical_columns(file_path):
+    df = pd.read_csv(file_path).dropna().astype({'is_categorical': bool})
+    return df[df.is_categorical].new.tolist()
+
+def do_basic_cleaning(df):
+    df_ = df.copy().drop_duplicates()
+    new_column_names = get_column_name_mapping('column_name_mapping.csv')
+    df_ = df_.rename(columns=new_column_names)
+    categorical_columns = get_categorical_columns('column_name_mapping.csv')
+    df_ = convert_to_categorical(df_, categorical_columns)
+    return df_
