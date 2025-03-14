@@ -5,5 +5,5 @@
 LAPD/__pycache__
 *.pkl
 *.xlsx
-
 git_cmds.txt
+LAPD/eda_report.html
