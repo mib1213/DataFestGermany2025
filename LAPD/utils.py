@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.colors as mcolors
 import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
+import scipy.stats as ss
 
 def show_missing_values(df):
     def min_or_nan(col):
@@ -166,3 +168,123 @@ def do_basic_cleaning(df):
     categorical_columns = get_categorical_columns('column_name_mapping.csv')
     df_ = convert_to_categorical(df_, categorical_columns)
     return df_
+
+def cramers_v(x, y):
+    contingency_table = pd.crosstab(x, y)
+    chi2, p, df, expected = ss.chi2_contingency(contingency_table)
+    n = contingency_table.sum().sum()
+    return np.sqrt(chi2 / (n * (min(contingency_table.shape) - 1))).round(2)
+
+def group_rare_categories(series, threshold=0.03):
+    category_counts = series.value_counts(normalize=True)
+    cumulative_distribution = category_counts.cumsum()
+    rare_categories = category_counts[cumulative_distribution > (1 - threshold)].index
+    return series.replace(rare_categories, 'Other')
+
+def binning(series, bins=4):
+    nunique = series.nunique()
+    if nunique <= bins:
+        return series.astype('category')
+    return pd.qcut(series, bins, duplicates='drop').astype('category')
+
+def cramers_v_matrix(df):
+    df_ = df.dropna().drop_duplicates()
+    df_cat = df_.select_dtypes(include=['object', 'category', 'bool']).copy()
+    df_num = df_.select_dtypes(include=['number']).copy()
+    matrix = pd.DataFrame(index=df_.columns, columns=df_.columns, dtype=float)
+    bool_cols = df_.select_dtypes(include=['bool']).columns
+    df_[bool_cols] = df_[bool_cols].astype('category')
+    not_bool_cols = df_.columns.difference(bool_cols)
+
+    for col in not_bool_cols:
+        df_[col] = group_rare_categories(df_[col], threshold=0.03)
+
+    if not df_num.empty:
+        df_num = df_num.apply(binning, bins=4)
+    
+    df_combined = pd.concat([df_cat, df_num], axis=1)
+    matrix = pd.DataFrame(index=df_combined.columns, columns=df_combined.columns, dtype=float)
+
+    for i, col1 in enumerate(df_combined.columns):
+        for j, col2 in enumerate(df_combined.columns):
+            if i == j:
+                matrix.loc[col1, col2] = 1.0
+            elif i > j:
+                 matrix.loc[col1, col2] = cramers_v(df_combined[col1], df_combined[col2])
+            else:
+                matrix.loc[col1, col2] = np.nan
+    return matrix
+
+def correlation_heatmap(matrix, title=None, cmap='Oranges'):
+
+    num_vars = len(matrix)
+    
+    fig_width = max(8, num_vars * 0.6)
+    fig_height = max(6, num_vars * 0.6)
+    
+    plt.figure(figsize=(fig_width, fig_height))
+    
+    ax = sns.heatmap(
+        matrix, 
+        annot=True, 
+        fmt=".2f", 
+        cmap=cmap, 
+        linewidths=1, 
+        linecolor="white", 
+        annot_kws={"size": max(8, 15 - num_vars * 0.5)},
+        cbar_kws={"shrink": 0.5, "aspect": 20},
+        square=True,
+        mask=np.triu(np.ones_like(matrix, dtype=bool), k=1)
+    )
+    
+    plt.title(title, fontsize=16)
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    plt.yticks(fontsize=10)
+
+    ax.set_facecolor('white')
+
+    return ax
+
+def cat_corr_heatmap(matrix):
+    accessible_orange = '#CF4B00'
+    healthy_orange = '#EC6602'
+    healthy_orange_50 = '#F9B591'
+    healthy_orange_25 = '#FDDDCB'
+    neutral_cream = '#FFF4E6'
+
+    custom_cmap = LinearSegmentedColormap.from_list(
+        None, 
+        [neutral_cream, healthy_orange_25, healthy_orange, accessible_orange],
+        N=256
+    )
+
+    ax = correlation_heatmap(matrix, title="Cramers V", cmap=custom_cmap)
+
+    cbar = ax.collections[0].colorbar
+    cbar.set_ticks([0, 0.5, 1])
+    cbar.set_ticklabels(["0", "0.5", "1"])
+
+    plt.show()
+
+def num_corr_heatmap(matrix):
+    accessible_orange = '#CF4B00'
+    healthy_orange = '#EC6602'
+    healthy_orange_50 = '#F9B591'
+    healthy_orange_25 = '#FDDDCB'
+    neutral_cream = '#FFF4E6'
+    siemens_petrol_25 = '#C8E6E6'
+    siemens_petrol_50 = '#87D2D2'
+    siemens_petrol = '#009999'
+    sh_black_10 = '#E6E6E6'
+    custom_cmap = LinearSegmentedColormap.from_list(
+        None, 
+        [siemens_petrol, siemens_petrol_50, siemens_petrol_25, sh_black_10, healthy_orange_25, healthy_orange_50, healthy_orange],
+        N=256
+    )
+    ax = correlation_heatmap(matrix, title="Pearson", cmap=custom_cmap)
+
+    cbar = ax.collections[0].colorbar
+    cbar.set_ticks([-1, 0, 1])
+    cbar.set_ticklabels(["-1", "0", "1"])
+
+    plt.show()
