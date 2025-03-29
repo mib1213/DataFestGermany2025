@@ -9,3 +9,5 @@ git_cmds.txt
 LAPD/eda_report.html
 # ignore any file with test in the name
 *test*
+__pycache__/
+*.dta

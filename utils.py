@@ -27,15 +27,15 @@ def show_missing_values(df):
         'dtype': df.dtypes.astype(str),
 
     }).set_index('S. No.')
+    return missing_df
+    # unique_dtypes = missing_df['dtype'].unique()
+    # palette = sns.color_palette("Set2", n_colors=len(unique_dtypes))
+    # dtype_color_map = {dt: f"background-color: {mcolors.to_hex(color)}" for dt, color in zip(unique_dtypes, palette)}
 
-    unique_dtypes = missing_df['dtype'].unique()
-    palette = sns.color_palette("Set2", n_colors=len(unique_dtypes))
-    dtype_color_map = {dt: f"background-color: {mcolors.to_hex(color)}" for dt, color in zip(unique_dtypes, palette)}
+    # def color_row(row):
+    #     return [dtype_color_map.get(row['dtype'], "")] * len(row)
 
-    def color_row(row):
-        return [dtype_color_map.get(row['dtype'], "")] * len(row)
-
-    return missing_df.style.apply(color_row, axis=1)
+    # return missing_df.style.apply(color_row, axis=1)
 
 def impute_mmm(series):
     series = series.dropna()
@@ -176,9 +176,14 @@ def cramers_v(x, y):
     phi2 = chi2 / n
     r, k = contingency_table.shape
     phi2corr = max(0, phi2 - ((k - 1) * (r - 1)) / (n - 1))
-    kcorr = k - ((k - 1) ** 2) / (n - 1)
-    rcorr = r - ((r - 1) ** 2) / (n - 1)
-    return np.sqrt(phi2corr / min((kcorr - 1), (rcorr - 1)))
+    kcorr = max(1, k - ((k - 1) ** 2) / (n - 1))
+    rcorr = max(1, r - ((r - 1) ** 2) / (n - 1))
+
+    denominator = min((kcorr - 1), (rcorr - 1))
+    if denominator <= 0:
+        return 0.0  # Assume no association if correction leads to undefined denominator
+
+    return np.sqrt(phi2corr / denominator)
 
 def group_rare_categories(series, threshold=0.03):
     category_counts = series.value_counts(normalize=True)
@@ -193,7 +198,7 @@ def binning(series, bins=4):
     return pd.qcut(series, bins, duplicates='drop').astype('category')
 
 def cramers_v_matrix(df):
-    df_ = df.dropna().drop_duplicates()
+    df_ = df.drop_duplicates()
     df_cat = df_.select_dtypes(include=['object', 'category', 'bool']).copy()
     df_num = df_.select_dtypes(include=['number']).copy()
     matrix = pd.DataFrame(index=df_.columns, columns=df_.columns, dtype=float)
